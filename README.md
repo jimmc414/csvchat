@@ -1,9 +1,4 @@
-# csvchat
-Chat with a CSV
-
-Sure, I can help you with that. Here is a possible README.md file for your project:
-
-CSVChat
+# CSVChat
 CSVChat is a Python project that allows you to ask questions about a CSV file and get answers using natural language processing.
 
 Features
