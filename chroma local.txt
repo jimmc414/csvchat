@@ -1,0 +1,63 @@
+I found a GitHub repository for the OpenAI Cookbook that shares example code for accomplishing common tasks with the OpenAI API1. There is a section on embeddings that shows how to use the OpenAI API to get text and code embeddings1. Here is an example python implementation that is simple but demonstrative:
+
+# Import the openai library
+import openai
+
+# Set your API key
+openai.api_key = "sk-..."
+
+# Create a chroma client
+import chromadb
+client = chromadb.Client()
+
+# Create a collection for storing embeddings
+collection = client.create_collection("openai-embeddings")
+
+# Define some text and code snippets to embed
+texts = [
+    "Hello world",
+    "How are you?",
+    "What is your name?",
+    "print('Hello world')",
+    "def add(x, y):\n  return x + y",
+    "import numpy as np"
+]
+
+# Choose an embedding model from OpenAI
+model = "text-embedding-ada-002"
+
+# Loop through the texts and get their embeddings from OpenAI
+for text in texts:
+    # Call the OpenAI API to get the embedding
+    response = openai.Embedding.create(input=text, model=model)
+    # Extract the embedding vector from the response
+    embedding = response["data"][0]["embedding"]
+    # Add the embedding to the collection with the text as metadata
+    collection.add(embeddings=[embedding], metadatas=[{"text": text}])
+
+# Query the collection with a new text or code snippet
+query = "def hello():\n  print('Hello world')"
+# Get the embedding for the query from OpenAI
+response = openai.Embedding.create(input=query, model=model)
+# Extract the embedding vector from the response
+query_embedding = response["data"][0]["embedding"]
+# Query the collection for the most similar embedding
+results = collection.query(query_embeddings=[query_embedding], n_results=3)
+# Print the results with their metadata and similarity scores
+for result in results:
+    print(result["metadata"]["text"], result["similarity"])
+
+
+{"prompt": "Import the openai library", "completion": "import openai"}
+{"prompt": "Set your API key for OpenAI", "completion": "openai.api_key = \"sk-...\""}
+{"prompt": "Create a chroma client instance", "completion": "import chromadb\nclient = chromadb.Client()"}
+{"prompt": "Create a collection for storing embeddings", "completion": "collection = client.create_collection(\"openai-embeddings\")"}
+{"prompt": "Define some text and code snippets to embed", "completion": "texts = [\n    \"Hello world\",\n    \"How are you?\",\n    \"What is your name?\",\n    \"print('Hello world')\",\n    \"def add(x, y):\\n  return x + y\",\n    \"import numpy as np\"\n]"}
+{"prompt": "Choose an embedding model from OpenAI", "completion": "model = \"text-embedding-ada-002\""}
+{"prompt": "Call the OpenAI API to get the embedding for a text", "completion": "response = openai.Embedding.create(input=text, model=model)"}
+{"prompt": "Extract the embedding vector from the API response", "completion": "embedding = response[\"data\"][0][\"embedding\"]"}
+{"prompt": "Add the embedding to the collection with the text as metadata", "completion": "collection.add(embeddings=[embedding], metadatas=[{\"text\": text}])"}
+{"prompt": "Get the embedding for a query from the OpenAI API", "completion": "response = openai.Embedding.create(input=query, model=model)"}
+{"prompt": "Extract the query embedding vector from the API response", "completion": "query_embedding = response[\"data\"][0][\"embedding\"]"}
+{"prompt": "Query the collection for the most similar embedding to the query", "completion": "results = collection.query(query_embeddings=[query_embedding], n_results=3)"}
+{"prompt": "Print the results with their metadata and similarity scores", "completion": "for result in results:\n    print(result[\"metadata\"][\"text\"], result[\"similarity\"])"}
